@@ -14,24 +14,25 @@ sources = [
 
 # Bash recipe for building across all platforms
 script = raw"""
+set -e
 cd $WORKSPACE/srcdir
 cd ThirdParty-Glpk-releases-1.10.5/
 
 # Get Glpk from mirror. gnu.org can be unreliable. Note: this will fail if wget or fetch are not present
 cp get.Glpk get.Glpk.orig
 cat > get.Glpk.patch <<'END'
-> --- get.Glpk.orig 2018-08-23 10:23:25.313568793 -0400
-> +++ get.Glpk2018-08-23 10:24:52.077782283 -0400
-> @@ -25,7 +25,7 @@
->  rm -f glpk*.tar.gz
->  
->  echo "Downloading the source code from ftp.gnu.org..."
-> -$wgetcmd ftp://ftp.gnu.org/gnu/glpk/glpk-${glpk_ver}.tar.gz
-> +$wgetcmd http://ftpmirror.gnu.org/gnu/glpk/glpk-${glpk_ver}.tar.gz
->  
->  echo "Uncompressing the tarball..."
->  gunzip -f glpk-${glpk_ver}.tar.gz
-> END
+--- get.Glpk.orig 2018-08-23 15:09:22.682356366 -0400
++++ get.Glpk2018-08-23 15:09:51.562429801 -0400
+@@ -25,7 +25,7 @@
+ rm -f glpk*.tar.gz
+ 
+ echo "Downloading the source code from ftp.gnu.org..."
+-$wgetcmd ftp://ftp.gnu.org/gnu/glpk/glpk-${glpk_ver}.tar.gz
++$wgetcmd http://ftpmirror.gnu.org/gnu/glpk/glpk-${glpk_ver}.tar.gz
+ 
+ echo "Uncompressing the tarball..."
+ gunzip -f glpk-${glpk_ver}.tar.gz
+END
 patch -l get.Glpk.orig get.Glpk.patch -o get.Glpk
 
 ./get.Glpk
